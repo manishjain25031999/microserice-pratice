@@ -25,7 +25,7 @@ public class OrderService {
       @Autowired
       private WebClient.Builder webClientBuilder ;
 
-    public void placeOrder(OrderRequest orderRequest) {
+    public String placeOrder(OrderRequest orderRequest) {
 
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -55,10 +55,15 @@ public class OrderService {
                 .allMatch(InventoryResponse ::isInStock);
 
         if(allProductResponse)
+        {
             orderRepo.save(order);
+            return "Order Placed Sucessfully";
+        }
         else
+        {
             throw new IllegalArgumentException("items is out of stock please try again later ");
 
+        }
     }
 
     private OrderLineItems mapToDto(OrderLineItemDto orderLineItemsDto) {
